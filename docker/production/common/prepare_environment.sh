@@ -110,6 +110,32 @@ else
 	CP_CACHE_HANDLER="file"
 fi
 
+if [ ! -z "${CP_API}" ]
+then
+	echo "API setting is not empty"
+	CP_API="\"${CP_API}\""
+
+	if [ -z "${CP_API_AUTH}" ]
+	then
+		echo "CP_API_AUTH is empty, using default"
+		CP_API_AUTH="true"
+	else
+		CP_API_AUTH="\"${CP_API_AUTH}\""
+	fi
+
+	if [ -z "${CP_API_AUTH_USERNAME}" ]
+	then
+		echo "CP_API_AUTH_USERNAME is empty, using default"
+		CP_API_AUTH_USERNAME="castopod"
+	fi
+
+	if [ -z "${CP_API_AUTH_PASSWORD}" ]
+	then
+		echo "CP_API_AUTH_PASSWORD is empty, using default"
+		CP_API_AUTH_PASSWORD="password"
+	fi
+fi
+
 if [ "${CP_MEDIA_FILE_MANAGER}" = "s3" ]
 then
 	if [ -z "${CP_MEDIA_S3_ENDPOINT}" ]
@@ -191,6 +217,16 @@ cache.redis.host="${CP_REDIS_HOST}"
 cache.redis.password=${CP_REDIS_PASSWORD}
 cache.redis.port=${CP_REDIS_PORT}
 cache.redis.database=${CP_REDIS_DATABASE}
+EOF
+fi
+
+if [ "${CP_API}" = "true" ]
+then
+	cat << EOF >> $ENV_FILE_LOCATION
+restapi.enabled="${CP_API}"
+restapi.basicAuth="${CP_API_AUTH}"
+restapi.basicAuthUsername="${CP_API_AUTH_USERNAME}"
+restapi.basicAuthPassword="${CP_API_AUTH_PASSWORD}"
 EOF
 fi
 
