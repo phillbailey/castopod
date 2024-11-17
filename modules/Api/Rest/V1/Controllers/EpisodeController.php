@@ -27,16 +27,25 @@ class EpisodeController extends Controller
         Services::restApiExceptions()->initialize();
     }
 
-    public function list(): ResponseInterface
+    public function list(int $podcastId = null): ResponseInterface
     {
         $query = $this->request->getGet('query');
         $order = $this->request->getGet('order') ?? 'newest';
         $podcastIds = $this->request->getGet('podcastIds');
+        $episodeIds = $this->request->getGet('episodeIds');
 
         $builder = (new EpisodeModel());
 
-        if ($podcastIds !== null) {
-            $builder->whereIn('podcast_id', explode(',', (string) $podcastIds));
+        if ($podcastId !== null) {
+            $builder->whereIn('podcast_id', $podcastId);
+        } else {
+            if ($podcastIds !== null) {
+                $builder->whereIn('podcast_id', explode(',', (string) $podcastIds));
+            }
+
+            if ($episodeIds !== null) {
+                $builder->whereIn('episode_id', explode(',', (string) $episodeIds));
+            }
         }
 
         if ($query !== null) {
