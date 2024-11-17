@@ -3,7 +3,7 @@ name: Build and push Docker image
 on:
   push:
     branches:
-      - ef-prod  # Replace with your branch name
+      - ef-prod
 
 jobs:
   build-and-push:
@@ -22,8 +22,14 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build the Docker image
-        run: docker build -t ghcr.io/${{ github.repository }}:${{ github.ref_name }} .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Push the Docker image
-        run: docker push ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+      - name: Build and push Castopod image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: docker/production/castopod/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}:latest
+          platforms: linux/amd64,linux/arm64
