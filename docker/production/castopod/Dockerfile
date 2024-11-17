@@ -19,7 +19,7 @@ COPY --from=CRON_BUILDER /usr/local/bin/supercronic /usr/local/bin/supercronic
 
 COPY docker/production/common/prepare_environment.sh /prepare_environment.sh
 COPY docker/production/castopod/entrypoint.sh /entrypoint.sh
-COPY castopod /var/www/castopod
+COPY . /var/www/castopod
 COPY docker/production/castopod/config.template.json /config.template.json
 COPY docker/production/common/uploads.template.ini /uploads.template.ini
 COPY docker/production/common/crontab.txt /crontab.txt
